@@ -66,4 +66,4 @@ jobs:
         with:
           app-name: 'kaos-tito'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_B35D8670796E4719B3EC6D145870E9B3 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_D0DFD3B3328B4B788A35897F5A648C70 }}
