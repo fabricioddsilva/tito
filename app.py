@@ -79,7 +79,7 @@ def eventos():
     cursor.close()
 
     # Renderizando o template em html e atribuindo os dados a variável eventos
-    return render_template("teste.html", eventos=eventos, username=username)
+    return render_template("eventos.html", eventos=eventos, username=username)
 
 #Editar Evento
 @app.route("/editar/<id>", methods = ['GET', 'POST'])
