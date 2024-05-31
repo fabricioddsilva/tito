@@ -7,10 +7,10 @@ load_dotenv()
 
 # Conexão com o banco de dados
 mydb = mysql.connector.connect(
-    host="srv-banco-tito.mysql.database.azure.com",
-    user="fabriciosilva",
-    password="#Coxinha123",
-    database="db_tito"
+    host=os.getenv('DB_HOST'),
+    user=os.getenv('DB_USER'),
+    password=os.getenv('DB_PASSWORD'),
+    database=os.getenv('DB_SCHEMA')
 )
 
 # Inicializando o Flask
