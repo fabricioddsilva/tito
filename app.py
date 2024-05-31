@@ -207,18 +207,18 @@ def logout():
     return redirect(url_for('eventos'))
 
 
-@app.route("/funcionario", methods = ['GET','POST'])
-def funcionario():
-    if request.method == 'POST':
-        req = request.form
-        cursor = mydb.cursor()
-        cursor.execute(f"INSERT INTO funcionarios (usuario, email, senha, matricula) VALUES ('{req['usuario']}','{req['email']}','{req['senha']}','{req['matricula']}')")
-        mydb.commit()
-        if (200):
-            return render_template("login.html", msg = 'Funcionario Cadastrado com Sucesso!!')
-        else:
-            return render_template("funcionario.html", msg = 'Ocorreu um erro no cadastro do funcionário.')
-    return render_template('funcionario.html')    
+# @app.route("/funcionario", methods = ['GET','POST'])
+# def funcionario():
+#     if request.method == 'POST':
+#         req = request.form
+#         cursor = mydb.cursor()
+#         cursor.execute(f"INSERT INTO funcionarios (usuario, email, senha, matricula) VALUES ('{req['usuario']}','{req['email']}','{req['senha']}','{req['matricula']}')")
+#         mydb.commit()
+#         if (200):
+#             return render_template("login.html", msg = 'Funcionario Cadastrado com Sucesso!!')
+#         else:
+#             return render_template("funcionario.html", msg = 'Ocorreu um erro no cadastro do funcionário.')
+#     return render_template('funcionario.html')    
 
 
 # Executando o aplicativo
