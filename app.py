@@ -16,7 +16,7 @@ mydb = mysql.connector.connect(
 # Inicializando o Flask
 app = Flask(__name__)
 
-app.secret_key = os.getenv("key")
+app.secret_key = os.getenv("SECRET_KEY")
 
 
 # Endpoint de criação de eventos
