@@ -107,7 +107,7 @@ def editar_evento(id):
         
         if request.method == 'POST':
             req = request.form
-            cursor.execute(f"UPDATE eventos SET nome = '{req['nome']}', data_evento = '{req['data']}', hora_inicio = '{req['hora_inicio']}', hora_fim = '{req['hora_fim']}', descricao = '{req['descricao']}', qtd_visitantes = '{req['visitantes']}' ")
+            cursor.execute(f"UPDATE eventos SET nome = '{req['nome']}', data_evento = '{req['data']}', hora_inicio = '{req['hora_inicio']}', hora_fim = '{req['hora_fim']}', descricao = '{req['descricao']}', qtd_visitantes = '{req['visitantes']}' WHERE id = '{id}' ")
             mydb.commit()
             if(200):
                 return redirect(url_for('eventos'))
