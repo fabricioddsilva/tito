@@ -1,44 +1,62 @@
-# TiTo - Assistente Virtual de Logística
-## Sobre o Projeto
-TiTo é um assistente virtual de logística desenvolvido para auxiliar em tarefas como agendamento de eventos, pesquisa por voz e controle de entrada e saída de funcionários. Este projeto é uma versão inicial (0.1) e está em constante desenvolvimento.
+# TiTo: Assistente Virtual para Gerenciamento e Segurança do Laboratório
 
-Funcionalidades Principais
-Agendamento de Eventos: TiTo pode criar novos eventos em um site específico, preenchendo campos como nome, data, horário, descrição e quantidade de vagas.
-Pesquisa por Voz: O assistente pode responder perguntas e fornecer informações com base em comandos de voz.
-Controle de Entrada e Saída: TiTo é capaz de gerenciar a entrada e saída de funcionários através de um sistema integrado.
-Requisitos
-Python 3.7 ou superior
-Bibliotecas Python: openai, speech_recognition, whisper, pyttsx3, selenium, python-dotenv
-Instalação
-Clone o repositório:
+## Descrição do Projeto
+O *TiTo* é um assistente virtual desenvolvido para o gerenciamento e segurança de um laboratório. Ele tem diversas funções como Agendar Visitas, Chatbot, e Controle de Acesso. Onde cada uma dessas funções são dividas em algumas aplicações criadas para englobar o ecosistema do *TiTo* 
 
-bash
-Copiar código
-git clone https://github.com/seu_usuario/TiTo.git
-Instale as dependências:
+## Tecnologias Utilizadas
+- *Desenvolvimento*:
+  - Python
+  - Speech Recognition
+  - Selenium
+  - pyttsx3
+  - OpenAI
 
-bash
-Copiar código
-pip install -r requirements.txt
-Crie um arquivo .env na raiz do projeto e adicione suas credenciais de API:
+## Funcionalidades Principais:
 
-plaintext
-Copiar código
-API_KEY=sua_chave_de_api
-USER=seu_usuario
-PASSWORD=sua_senha
-REGISTRATION=sua_matricula
-Execute o script tito.py:
+### 1. Marcação de Eventos na Agenda:
+- TiTo pode ajudar a criar e agendar novos eventos no nosso site oficial https://kaos-tito.azurewebsites.net/.
 
-bash
-Copiar código
-python tito.py
-Uso
-Você pode interagir com o TiTo através de comandos de voz ou texto.
-Para criar um novo evento, diga ou escreva: "Tito, marcar novo evento".
-Para fazer uma pergunta, comece com "Tito" ou "tito" seguido da sua pergunta.
-Contribuição
-Contribuições são bem-vindas! Sinta-se à vontade para abrir um PR ou uma issue com sugestões, correções ou novas funcionalidades.
+### 2. Pequisa Rápida por Voz:
+- Você pode fazer perguntas e obter respostas instantâneas utilizando comandos de voz.
 
-Licença
-Este projeto está licenciado sob a MIT License.
+## Como Usar:
+
+### 1. Instalação:
+- Clone o reposítorio
+    ```bash 
+    git clone --branch ia https://github.com/fabricioddsilva/tito.git
+    ```
+
+- Instale as dependências necessárias utilizando:
+    ```bash
+    pip install -r requirements.txt 
+    ```
+
+### 2. Configuração
+- Crie um arquivo `.env` e adicione sua chave de usuário OpenAI nesse modelo:
+    `API_KEY = "sua_chave_de_api"`
+
+- No mesmo arquivo adicione o usuário de teste para conseguir criar novos eventos utilizando o comando por voz.
+    `USER = "admin"`, `PASSWORD = "w2YtaWAYegfyZBtk6b3NPH3CwkHhUG"`, `REGISTRATION = 7omHFiTAXnMk9GC`
+
+### Execução
+- Execute o assistente atráves do comando:
+     ```bash
+     Python tito.py
+     ```
+     ou simplesmente inicie atráves da opção em sua IDE
+
+### Comandos Predefinidos
+- "*Tito*" é o comando principal para interagir com o assistente.
+
+- "*Tito, como você pode nos ajudar?*" traz uma descrição das funcionalidades do TiTo.
+
+- "*Tito, como você foi feito?*" traz uma descrição pouco técnica de como ele foi criado.
+
+
+
+
+
+
+
+
