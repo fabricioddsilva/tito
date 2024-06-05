@@ -3,6 +3,16 @@
 ## Descrição do Projeto
 O *TiTo* é um assistente virtual desenvolvido para o gerenciamento e segurança de um laboratório. Ele tem diversas funções como Agendar Visitas, Chatbot, e Controle de Acesso. Onde cada uma dessas funções são dividas em algumas aplicações criadas para englobar o ecosistema do *TiTo* 
 
+## Equipe:
+- Ana Paula
+- David Felipe
+- Fabrício Dias
+- Laura Beatriz
+- Maria Eduarda
+- Reginaldo Alves
+- Sidney Ródrigo
+- Victor Lucas
+
 ## Tecnologias Utilizadas
 - *Desenvolvimento*:
   - Python
