@@ -11,6 +11,7 @@ Sendo elas:
 - IA: O nosso chatbot que utiliza o modelo da OpenAI. https://github.com/fabricioddsilva/tito/tree/ia
   
 - IoT: Nossa solução para controle de acesso simples. https://github.com/fabricioddsilva/tito/tree/visitito
+- 
 Acessando as branches em especifico você tera acesso as diferentes soluções que nós criamos.
   
 ### Tecnologias Utilizadas
