@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/form.css') }}">
+    <link href="{{url_for('static', filename='css/header.css')}}" rel="stylesheet">
+    <link href="{{url_for('static', filename='css/footer.css')}}" rel="stylesheet">
+</head>
+
+<body>
+
+    <header id='headerUpper'>
+        <nav id='align'>
+            <div id="headerSiteName">
+                <a
+                  href='/'>
+                      <img id='logo' src="{{url_for('static', filename='assets/exemploLogo.jpg')}}" alt="Logo do Tito" /> 
+                </a>
+              </div>
+      
+              <div class="headerItems">
+                {% if username != None %}  
+                 <a
+                 class="headerScreenLinks"
+                 href='/deslogar'
+                 >Deslogar</a>
+       
+                 
+               <a
+                 class="headerScreenLinks"
+                 href='/evento/novo'
+                 >Novo Evento</a>
+                 {% endif %}
+             </div>
+    
+        </nav>
+    
+        <hr id='headerHR' />
+    </header>
+    
+    <div class="form-body">
+        <div class="row">
+            <div class="form-holder">
+                <div class="form-content">
+                    <div class="form-items">
+                        <h3>Login</h3>
+                        <p>Preencha os Dados!!</p>
+                        {% if msg: %}
+                        <h3><strong>{{msg}}</strong></h3>
+                        {% endif %}
+                        <form class="requires-validation" method="POST" novalidate>
+
+                            <div class="col-md-12">
+                                <input class="form-control" type="text" name="usuario" placeholder="Usuário" required>
+                                <div class="invalid-feedback">Preencha o nome do usuário!</div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <input class="form-control" type="password" name="senha" placeholder="Senha" required>
+                                <div class="invalid-feedback">Preencha a senha!</div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <input class="form-control" type="text" name="matricula" placeholder="Matrícula"
+                                    required>
+                                <div class="invalid-feedback">Preencha a matrícula!</div>
+                            </div>
+
+                            <div class="form-button mt-3">
+                                <button id="submit" type="submit" class="btn btn-primary">Logar</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+          <img class="logo" src="{{url_for('static', filename='assets/exemploLogo.jpg')}}" alt="Logo" />
+  
+          <p id="copyright">Todos os direitos reservados &copy; 2024</p>
+          
+          <div class="redes-links">
+            <p class="redes-links_p-redes">Acompanhe Nossas Redes</p>
+            <div class="redes-links_img-redes">
+              <a href=""><img src="{{url_for('static',filename='/assets/iconYoutube.svg')}}" alt="Youtube Icon"/></a>
+              <a href=""><img src="{{url_for('static',filename='/assets/iconTwitter.svg')}}" alt="Twitter Icon"/></a>
+              <a href=""><img src="{{url_for('static',filename='/assets/iconLinkedin.svg')}}" alt="LinkedIn Icon"/></a>
+              <a href=""><img src="{{url_for('static',filename='/assets/iconFacebook.svg')}}" alt="Facebook Icon"/></a>
+              <a href=""><img src="{{url_for('static',filename='/assets/iconInstagram.svg')}}" alt="Instagram Icon"/></a>
+              <a href=""><img src="{{url_for('static',filename='/assets/iconTelegram.svg')}}" alt="Telegram Icon"/></a>
+            </div>
+          </div>
+          
+        </div>
+      
+      </footer>
+    
+    <script src="{{ url_for('static', filename='js/form.js') }}"></script>
+</body>
+
+</html>

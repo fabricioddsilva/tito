@@ -1,0 +1,97 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700;900&display=swap");
+
+#headerUpper
+{
+
+    display: flex;
+    background-color: #000500;
+    border-bottom: 5px solid #F9D876;
+    padding: 1rem 0rem;
+    margin-bottom: 35px;
+}
+
+/*===- Alinhamento vertical para items da caixa acima da listra... -===*/
+
+#headerSiteName
+{
+    margin-right: 5%;
+    margin-left: 10%;
+    min-width: 65px;
+}
+
+.headerScreenLinks  
+{
+    font-size: 19px;
+    text-decoration: none;
+    padding: .2rem .8rem;
+    background-color: #ff7c1e00;
+    color: #F9D876;
+    transition: .2s;
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+}
+
+.headerScreenLinks:hover
+{
+    transition: .4s;
+    background-color: #FCFAFC;
+    color: #000500;
+    text-decoration: none;
+}
+
+
+/*===- Separando logo e o restante dos elementos para centralizá-los na tela sem que ele fiquem tronxos -===*/
+#align
+{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    gap: 2rem;
+}
+
+.headerItems
+{
+    margin-right: 44px;
+    display: flex;
+    gap: 6rem;
+}
+
+
+#logo
+{
+
+    /* margin-left: 10px; */
+    width: 100%;
+    height: 4rem;
+    
+}
+
+/*===- Listra divisora -===*/
+
+
+
+
+@media screen and (max-width: 1200px){}
+
+@media screen and (max-width: 1024px){}
+
+@media screen and (max-width: 768px){
+    header {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 560px){
+
+}
+
+@media screen and (max-width: 480px){
+
+}
+
+@media screen and (max-width: 320px){}
+
+@media screen and (max-width: 280px){}

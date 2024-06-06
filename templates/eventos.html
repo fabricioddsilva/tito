@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="utf-8">
+  <title>Visitas Accenture</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css">
+  <link href="{{url_for('static', filename='css/eventos.css')}}" rel="stylesheet">
+  <link href="{{url_for('static', filename='css/header.css')}}" rel="stylesheet">
+  <link href="{{url_for('static', filename='css/footer.css')}}" rel="stylesheet">
+</head>
+
+<body>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css"
+    integrity="sha256-3sPp8BkKUE7QyPSl6VfBByBroQbKxKG7tsusY2mhbVY=" crossorigin="anonymous" />
+    
+       
+<header id='headerUpper' style=" margin-top: -20px">
+      
+    <nav id='align'>
+      <div id="headerSiteName">
+        <a
+          href='/'>
+              <img id='logo' src="{{url_for('static', filename='assets/exemploLogo.jpg')}}" alt="Logo do Tito" /> 
+        </a>
+      </div>
+
+      <div class="headerItems">
+         {% if username != None %}  
+          <a
+          class="headerScreenLinks"
+          href='/deslogar'
+          >Deslogar</a>
+
+          
+        <a
+          class="headerScreenLinks"
+          href='/evento/novo'
+          >Novo Evento</a>
+          {% endif %}
+      </div>
+
+    </nav>
+
+    <hr id='headerHR' />
+  </header>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-10 mx-auto mb-4">
+        <div class="section-title text-center">
+          <h3 class="top-c-sep">Visitas Accenture</h3>
+        </div>
+      </div>
+    </div>
+    {% for evento in eventos %}
+    <div id="visit-list" class="filter-result">
+        <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
+            <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
+              <div class="job-content">
+                <span class="visit-name">{{evento.nome}}</span>
+                <ul class="visit-details d-md-flex flex-wrap text-capitalize ff-open-sans">
+                    
+                  <li><i class="zmdi zmdi-calendar mr-2"></i> Data: {{evento.data}}</li>
+                  <li><i class="zmdi zmdi-time mr-2"></i> Horário: {{evento.hora_inicio}} - {{evento.hora_fim}}</li>
+                  <li><i class="zmdi zmdi-accounts mr-2"></i> Vagas: 0/{{evento.vagas}}</li>
+                    
+                </ul>
+              </div>
+            </div>
+            <div class="job-right my-4 flex-shrink-0">
+              <a href="{{'/visitante/%s'%evento.id|urlencode}}" class="btn d-block w-100 d-sm-inline-block btn-light">Se Inscrever</a>
+              {% if username != none %}
+              <a href="{{'/editar/%s'%evento.id|urlencode}}"><button class="btn btn-light" title="Editar">
+                <i class="zmdi zmdi-edit"></i>
+              </button></a>
+              <a href="{{'/deletar/%s'%evento.id|urlencode}}"><button class="btn btn-light" title="Deletar">
+              <i class="zmdi zmdi-delete"></i>
+              </button></a>
+              {% endif %}
+            </div>
+          </div>
+    </div>
+    {% endfor %}
+
+    <nav aria-label="Page navigation">
+      <ul id="pagination" class="pagination pagination-reset justify-content-center">
+        <!-- Pagination items will be inserted here dynamically -->
+      </ul>
+    </nav>
+  </div>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <img class="logo" src="{{url_for('static', filename='assets/exemploLogo.jpg')}}" alt="Logo" />
+
+        <p id="copyright">Todos os direitos reservados &copy; 2024</p>
+        
+        <div class="redes-links">
+          <p class="redes-links_p-redes">Acompanhe Nossas Redes</p>
+          <div class="redes-links_img-redes">
+            <a href=""><img src="{{url_for('static',filename='/assets/iconYoutube.svg')}}" alt="Youtube Icon"/></a>
+            <a href=""><img src="{{url_for('static',filename='/assets/iconTwitter.svg')}}" alt="Twitter Icon"/></a>
+            <a href=""><img src="{{url_for('static',filename='/assets/iconLinkedin.svg')}}" alt="LinkedIn Icon"/></a>
+            <a href=""><img src="{{url_for('static',filename='/assets/iconFacebook.svg')}}" alt="Facebook Icon"/></a>
+            <a href=""><img src="{{url_for('static',filename='/assets/iconInstagram.svg')}}" alt="Instagram Icon"/></a>
+            <a href=""><img src="{{url_for('static',filename='/assets/iconTelegram.svg')}}" alt="Telegram Icon"/></a>
+          </div>
+        </div>
+        
+      </div>
+    
+    </footer>
+
+
+  <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js"></script>
+  
+</body>
+
+</html>
