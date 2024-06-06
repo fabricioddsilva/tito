@@ -6,7 +6,7 @@ O TiTo é um assistente virtual desenvolvido para o gerenciamento e segurança d
 ### Organização do Repositório
 Temos 3 branches principais onde se encontram os nossos projetos, cada uma delas tem os detalhes especificos para configuração e instalação das aplicações. 
 Sendo elas:
-- Visitito: Nosso site para agendamento de visitas.
+- Visitito: Nosso site para agendamento de visitas. `https://github.com/fabricioddsilva/tito/tree/ia`
 - IA: O nosso chatbot que utiliza o modelo da OpenAI.
 - IoT: Nossa solução para controle de acesso simples.
 Acessando as branches em especifico você tera acesso as diferentes soluções que nós criamos.
