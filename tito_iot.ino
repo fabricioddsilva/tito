@@ -22,8 +22,8 @@ char *redeAtual;
 
 
 struct WiFiCredentials wifiNetworks[]={
-  {"NETMAIS_TULIBIA_979133843", "adm32668634"},
   {"Cimento", "comercimento5544"},
+  {"NETMAIS_TULIBIA_979133843", "adm32668634"},
   {"iPhone de Arnott","arbbbe11"},
   {"SENAC-Mesh","09080706"},
   {"Vivo-Internet-E532", "6EFC366C"},
@@ -33,8 +33,9 @@ struct WiFiCredentials wifiNetworks[]={
 
 };
 
+int numNetworks = NWIFIS;
+
 // Número de redes WiFi para tentar conectar
-const int numNetworks = sizeof(wifiNetworks) / sizeof(wifiNetworks[2]);
 
 bool sistema = false;
 
@@ -49,20 +50,20 @@ MFRC522DriverSPI driver{ss_pin}; // Create SPI driver.
 MFRC522 mfrc522{driver};  // Create MFRC522 instance.
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   mfrc522.PCD_Init();
-   do{
-      conectaWifi(); // tenta conectar em uma das redes disponiveis
+   for(int i = 0; i < numNetworks; ++i) {
+      conectaWifi(i); // tenta conectar em uma das redes disponiveis
       if (WiFi.status() == WL_CONNECTED){
         led_bar(255,0,255,100);
         delay(1500);
         sistema = true;
+        break;
       }
 
       if (WiFi.status() != WL_CONNECTED )
         delay(100);
- 
-  }while(WiFi.status() != WL_CONNECTED);
+  }
   leds.begin();
 	
 }
@@ -130,20 +131,21 @@ void led_bar(int red, int green, int blue, int delay_time) {
 }
 
 
-void conectaWifi()
+void conectaWifi(int index)
 {
-// Loop através de cada rede WiFi
-  for (int i = 0; i < numNetworks; ++i) {
+// Loop através de cada rede WiF
     Serial.print("Conectando-se a ");
-    Serial.println(wifiNetworks[i].ssid);
+    Serial.println(wifiNetworks[index].ssid);
 
     // Tentativa de conexão com a rede WiFi
-    WiFi.begin(wifiNetworks[i].ssid, wifiNetworks[i].password);
+    WiFi.begin(wifiNetworks[index].ssid, wifiNetworks[index].password);
 
+    int attempt = 0;
     // Aguarda a conexão WiFi ser estabelecida
-    while (WiFi.status() != WL_CONNECTED) {
-      delay(1000);
+    while (WiFi.status() != WL_CONNECTED && attempt < 5) {
+      delay(500);
       Serial.print(".");
+      attempt++;
     }
 
     // Verifica se a conexão WiFi foi bem-sucedida
@@ -152,12 +154,12 @@ void conectaWifi()
       Serial.println("Conexão bem-sucedida!");
       Serial.print("Endereço IP: ");
       Serial.println(WiFi.localIP());
-      break; // Sai do loop se a conexão for bem-sucedida
+      // Sai do loop se a conexão for bem-sucedida
     } else {
       Serial.println();
       Serial.println("Falha ao conectar-se!");
     }
-  }
+  
 }
 
 void autenticar(String uuid) {
