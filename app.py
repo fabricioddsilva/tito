@@ -8,16 +8,16 @@ load_dotenv()
 
 # Conexão com o banco de dados
 mydb = mysql.connector.connect(
-    host=os.getenv('HOST'),
-    user=os.getenv('USER'),
-    password=os.getenv('PASSWORD'),
-    database=os.getenv('DATABASE')
+    host=os.getenv('DB_HOST'),
+    user=os.getenv('DB_USER'),
+    password=os.getenv('DB_PASSWORD'),
+    database=os.getenv('DB_DATABASE')
 )
 
 # Inicializando o Flask
 app = Flask(__name__, static_folder='static')
 
-app.secret_key = os.getenv('key')
+app.secret_key = os.getenv('SECRET_KEY')
 
 
 # Endpoint para mostrar todos os eventos
