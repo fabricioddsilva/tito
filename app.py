@@ -1,5 +1,5 @@
 import mysql.connector
-from flask import Flask, request, render_template, redirect, url_for, session,json
+from flask import Flask, request, render_template, redirect, url_for, session,json, jsonify
 from dotenv import load_dotenv
 import os
 import agenda
@@ -8,16 +8,16 @@ load_dotenv()
 
 # Conexão com o banco de dados
 mydb = mysql.connector.connect(
-    host=os.getenv('DB_HOST'),
-    user=os.getenv('DB_USER'),
-    password=os.getenv('DB_PASSWORD'),
-    database=os.getenv('DB_SCHEMA')
+    host=os.getenv('HOST'),
+    user=os.getenv('USER'),
+    password=os.getenv('PASSWORD'),
+    database=os.getenv('DATABASE')
 )
 
 # Inicializando o Flask
 app = Flask(__name__, static_folder='static')
 
-app.secret_key = os.getenv('SECRET_KEY')
+app.secret_key = os.getenv('key')
 
 
 # Endpoint para mostrar todos os eventos
@@ -33,7 +33,7 @@ def eventos():
     cursor = mydb.cursor()
 
   
-    cursor.execute("SELECT * FROM eventos")
+    cursor.execute("SELECT * FROM eventos ORDER BY data_evento DESC")
 
     todos_eventos = cursor.fetchall()
 
@@ -56,7 +56,7 @@ def eventos():
     cursor.close()
 
     # Renderizando o template em html e atribuindo os dados a variável eventos
-    return render_template("eventos.html", eventos=eventos, username=username)
+    return render_template("eventos.html", username=username, eventos = eventos)
 
 
 # Endpoint de criação de eventos
@@ -71,7 +71,7 @@ def form():
     # Caso a requisição for post
     if request.method == 'POST':
 
-        req = request.form
+        req = request.get_json()
 
         google_event = agenda.criar_evento(req['nome'], req['data'], req['hora_inicio'], req['hora_fim'], req['descricao'])
         
@@ -84,11 +84,11 @@ def form():
         mydb.commit()
 
         if (200):
-            print("Evento Criado com sucesso!")
+            return "Evento Criado com Sucesso!!"
 
         return redirect(url_for('eventos'))
 
-    return render_template("novo_evento.html", username=username)
+    return render_template("novo_evento.html")
 
 
 #Editar Evento
@@ -122,12 +122,12 @@ def editar_evento(id):
         )
         
         if request.method == 'POST':
-            req = request.form
+            req = request.json()
             evento_atualizado = agenda.editar_evento(req['nome'], req['data'], req['hora_inicio'], req['hora_fim'], req['descricao'], req['google_id'])
             cursor.execute(f"UPDATE eventos SET nome = '{req['nome']}', data_evento = '{req['data']}', hora_inicio = '{req['hora_inicio']}', hora_fim = '{req['hora_fim']}', descricao = '{req['descricao']}', qtd_visitantes = '{req['visitantes']}' WHERE id = '{id}' ")
             mydb.commit()
             if(200) and evento_atualizado == 'ok':
-                return redirect(url_for('eventos'))
+                return "Evento Alterado com Sucesso!!"
             else:
                 render_template('editar_evento.html', msg = 'Não foi possível alterar o evento')
                 
@@ -138,7 +138,7 @@ def editar_evento(id):
 def deletar_evento(id):
     
     if request.method == 'POST':
-        req = request.form
+        req = request.json()
         
         cursor = mydb.cursor()
         cursor.execute(f"SELECT matricula FROM funcionarios WHERE matricula = '{req['matricula']}'")
@@ -155,7 +155,7 @@ def deletar_evento(id):
             evento_deletado = agenda.excluir_evento(google_id)
             mydb.commit()
             if (200) and evento_deletado == 'ok':
-                return redirect(url_for('eventos'))
+                return "Evento Deletado com Sucesso"
             else:
                 return render_template("verificacao.html", msg = 'Ocorreu um erro durante a mudança')
         
@@ -237,7 +237,24 @@ def login():
     
     return render_template("login.html", username = username)
 
-
+@app.route("/evento", methods = ['GET'])
+def evento_proximo():
+    cursor = mydb.cursor()
+    cursor.execute(f"SELECT * FROM eventos ORDER BY data_evento DESC LIMIT 1")
+    resultados = cursor.fetchall()
+    evento = list()
+    for dado in resultados:
+        evento.append(
+            {
+                "id" : dado[0],
+                "nome" : dado[1],
+                "data_evento" : dado[2],
+                "hora_inicio" : dado[3],
+                "hora_fim" : dado[4],
+                "visitantes" : dado[6]
+            }
+        )
+    return jsonify(evento)
 
 @app.route('/deslogar')
 def logout():
