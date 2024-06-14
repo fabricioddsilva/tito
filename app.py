@@ -8,16 +8,16 @@ load_dotenv()
 
 # Conexão com o banco de dados
 mydb = mysql.connector.connect(
-    host=os.getenv('DB_HOST'),
-    user=os.getenv('DB_USER'),
-    password=os.getenv('DB_PASSWORD'),
-    database=os.getenv('DB_SCHEMA')
+    host=os.getenv('HOST'),
+    user=os.getenv('USER'),
+    password=os.getenv('PASSWORD'),
+    database=os.getenv('DATABASE')
 )
 
 # Inicializando o Flask
 app = Flask(__name__, static_folder='static')
 
-app.secret_key = os.getenv('SECRET_KEY')
+app.secret_key = os.getenv('key')
 
 
 # Endpoint para mostrar todos os eventos
@@ -32,7 +32,6 @@ def eventos():
     # Criação do cursor para executar comandos
     cursor = mydb.cursor()
 
-  
     cursor.execute("SELECT * FROM eventos ORDER BY data_evento DESC")
 
     todos_eventos = cursor.fetchall()
