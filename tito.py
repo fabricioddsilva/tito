@@ -10,6 +10,9 @@ from selenium.webdriver.common.by import By
 import time
 import re
 from dotenv import load_dotenv
+import requests
+from datetime import datetime
+
 
 load_dotenv()
 
@@ -125,22 +128,38 @@ def converter_horario(horario):
             horario = "13:00"
         elif "duas da tarde" in horario or "2 horas da tarde" in horario or "2:00 da tarde" in horario:
             horario = "14:00"
-        elif "da manhã" in horario:
-            horario = horario.replace("da manhã", "")
+        elif "da manhã" in horario or "horas da manhã" in horario:
+            
+            if "horas da manhã" in horario:
+                horario = horario.replace("horas da manhã", "")
+            elif "da manhã" in horario:
+                horario = horario.replace("da manhã", "")
+                
             partes = re.split(r":", horario)
             hora = int(partes[0])
             minutos = int(partes[1])
             # Se a hora for 12, torná-la 0 para representar 12:00 AM
             hora = hora if hora != 12 else 0
-        elif "da tarde" in horario:
-            horario = horario.replace("da tarde", "")
+        elif "da tarde" in horario or "horas da tarde" in horario:
+            
+            if "horas da tarde" in horario:
+                horario = horario.replace("horas da tarde", "")
+            elif "da tarde" in horario:
+                horario = horario.replace("da tarde", "")
+            
+            
             partes = re.split(r":", horario)
             hora = int(partes[0])   # Adicionar 12 horas para representar PM
             minutos = int(partes[1])
             # Se a hora for 12 PM, manter 12, caso contrário, adicionar 12 horas
             hora = hora if hora == 12 else hora + 12
-        elif "da noite" in horario:
-            horario = horario.replace("da noite", "")
+        elif "da noite" in horario or "horas da noite" in horario:
+            
+            if "horas da noite" in horario:
+                horario = horario.replace("horas da noite", "")
+            elif " da noite" in horario:
+                horario = horario.replace("da noite", "")
+            
             partes = re.split(r":", horario)
             hora = int(partes[0])
             minutos = int(partes[1])
@@ -150,7 +169,7 @@ def converter_horario(horario):
             hora += 12
         else:
             print("Não entendi. Por favor, tente novamente.")
-        return None
+            return None
 
     except sr.UnknownValueError:
         print("Desculpe, não entendi. Poderia repetir?")
@@ -250,6 +269,26 @@ while True:
                 print("Tito:", resposta)
                 if falar:
                     talk(resposta)
+                    
+            elif "qual evento" in question and "recente" in question or "qual evento" in question and "próximo":
+                response = requests.get('http://127.0.0.1:5000/evento')
+                data = response.json()[0]['data_evento']
+                data_convert = datetime.strptime(data, "%Y-%m-%d")
+                data_atual = datetime.now()
+                tempo_restante = data_convert.day - data_atual.day
+                hora_inicio = response.json()[0]['hora_inicio']
+                hora_fim = response.json()[0]['hora_fim']
+                visitantes = response.json()[0]['visitantes']
+                nome = response.json()[0]['nome']
+                
+                if tempo_restante == 1:
+                    resposta = f"O evento mais recente é o {nome} que acontecerá amanhã das {hora_inicio} até {hora_fim}"
+                else:
+                    resposta = f"O evento mais recente é o {nome} que acontecerá daqui a {tempo_restante} dias, das {hora_inicio} até {hora_fim}"
+                print("Me: ", question)
+                print("Tito: ", resposta)
+                if falar:
+                    talk(resposta)
             
             #Condicional para criação de um novo evento usando a aplicação de criação de eventos
             elif "Marcar novo evento" in question or "marcar Novo Evento" in question or "Marcar Novo Evento" in question or "Novo Evento" in question or "novo evento" in question or "Criar Novo Evento" in question or "criar novo evento" in question:
@@ -257,7 +296,7 @@ while True:
                 # Abrir o navegador Chrome
                 driver = webdriver.Chrome()
                 # Navegar até o site
-                driver.get("https://kaos-tito.azurewebsites.net/login")
+                driver.get("http://127.0.0.1:5000//login")
                 # Esperar alguns segundos para a página carregar completamente
                 time.sleep(1)
                 # Preencher os campos do formulário
@@ -266,7 +305,7 @@ while True:
                 driver.find_element(By.NAME, "matricula").send_keys(os.getenv("REGISTRATION"))
                 # Submeter o formulário
                 driver.find_element(By.ID,"submit").click()
-                driver.get("https://kaos-tito.azurewebsites.net/evento/novo")
+                driver.get("http://127.0.0.1:5000//evento/novo")
                 
                 if falar:
                     print("Preenchendo o campo nome...")
@@ -274,105 +313,128 @@ while True:
                     nome = input_por_voz()
                     driver.find_element(By.NAME, "nome").send_keys(nome)
                     print("Navegação concluída.")
-                    if falar:
+                    
+                if falar:
                         print("Preenchendo o campo data...")
                         talk("Qual a data desse evento?")
                         data = input_por_voz()
                         data_formatada = formatar_data(data)
                         driver.find_element(By.NAME, "data").send_keys(data_formatada)
-                        if falar:
-                            print("Preenchendo o campo hora inicial...")
-                            talk("Qual o horário de inicio do evento?")
-                            hora_inicio = input_por_voz()
-                            if converter_horario(hora_inicio) == None:
+                        
+                if falar:
+                        print("Preenchendo o campo hora inicial...")
+                        talk("Qual o horário de inicio do evento?")
+                        hora_inicio = input_por_voz()
+                        if converter_horario(hora_inicio) == None:
                                     hora_inicio = input_por_voz()
                                     hora_inicio_formatada = converter_horario(hora_inicio)
-                            else:
+                                    driver.find_element(By.NAME, "hora_inicio").send_keys(hora_inicio_formatada)
+                        else:
                                 hora_inicio_formatada = converter_horario(hora_inicio)
                                 driver.find_element(By.NAME, "hora_inicio").send_keys(hora_inicio_formatada)
-                                if falar:
-                                    print("Preenchendo o campo hora de termino...")
-                                    talk("Qual o horário de termino do evento?")
-                                    hora_fim = input_por_voz()
-                                    if converter_horario(hora_fim) == None:
+                                
+                if falar:
+                        print("Preenchendo o campo hora de termino...")
+                        talk("Qual o horário de termino do evento?")
+                        hora_fim = input_por_voz()
+                        if converter_horario(hora_fim) == None:
                                         hora_fim = input_por_voz()
                                         hora_fim_formatada = converter_horario(hora_fim)
-                                    else:
+                                        driver.find_element(By.NAME, "hora_fim").send_keys(hora_fim_formatada)
+                        else:
                                         hora_fim_formatada = converter_horario(hora_fim)
                                         driver.find_element(By.NAME, "hora_fim").send_keys(hora_fim_formatada)
-                                        if falar:
-                                            print("Preenchendo o campo hora de descrição...")
-                                            talk("Qual a descrição do evento?")
-                                            descricao = input_por_voz()
-                                            driver.find_element(By.NAME, "descricao").send_keys(descricao)
-                                            if falar:
-                                                print("Preenchendo o campo quantidade de visitantes...")
-                                                talk("Qual seria a quantidade de vagas para esse evento?")
-                                                vagas = input_por_voz()
-                                                driver.find_element(By.NAME, "visitantes").send_keys(vagas)
-                                                confirmacao = False
-                                                while not confirmacao:
-                                                    print("Confirmando os dados inseridos...")
-                                                    talk("Confirme os dados inseridos. Deseja confirmar?")
-                                                    resposta = input_por_voz().lower()
-                                                    if "sim" in resposta:
-                                                        confirmacao = True
-                                                    elif "não" in resposta or "nao" in resposta:
-                                                        # Perguntar qual campo deseja alterar
-                                                        print("Qual campo você deseja alterar?")
-                                                        talk("Qual campo você deseja alterar?")
-                                                        campo_alterar = input_por_voz().lower()
-                                                        if "nome" in campo_alterar:
-                                                            talk("Qual o novo nome do evento?")
-                                                            nome = input_por_voz()
-                                                            driver.find_element(By.NAME, "nome").clear()
-                                                            driver.find_element(By.NAME, "nome").send_keys(nome)
-                                                        elif "data" in campo_alterar:
-                                                            talk("Qual a nova data do evento?")
-                                                            data = input_por_voz()
-                                                            data_formatada = formatar_data(data)
-                                                            driver.find_element(By.NAME, "data").clear()
-                                                            driver.find_element(By.NAME, "data").send_keys(data_formatada)
-                                                        elif "hora de inicio" in campo_alterar:
-                                                            talk("Qual o novo horário de inicio do evento?")
-                                                            hora_inicio = input_por_voz()
-                                                            if converter_horario(hora_inicio) == None:
-                                                                hora_inicio = input_por_voz()
-                                                                hora_inicio_formatada = converter_horario(hora_inicio)
-                                                            else:
-                                                                hora_inicio_formatada = converter_horario(hora_inicio)
-                                                                driver.find_element(By.NAME, "hora_inicio").clear()
-                                                                driver.find_element(By.NAME, "hora_inicio").send_keys(hora_inicio_formatada)
-                                                        elif "hora de termino" in campo_alterar:
-                                                            talk("Qual o novo horário de término do evento?")
-                                                            hora_fim = input_por_voz()
-                                                            if converter_horario(hora_fim) == None:
-                                                                hora_fim = input_por_voz()
-                                                                hora_fim_formatada = converter_horario(hora_fim)
-                                                            else:
-                                                                hora_fim_formatada = converter_horario(hora_fim)
-                                                                driver.find_element(By.NAME, "hora_fim").clear()
-                                                                driver.find_element(By.NAME, "hora_fim").send_keys(hora_inicio_formatada)
-                                                        elif "descricao" in campo_alterar:
-                                                            talk("Qual a nova descrição do evento?")
-                                                            resposta = input_por_voz()
-                                                            driver.find_element(By.NAME, "descricao").clear()
-                                                            driver.find_element(By.NAME, "descricao").send_keys(resposta)
-                                                        elif "quantidade de vagas" in campo_alterar:
-                                                            talk("Qual seria a nova quantidade de vagas para esse evento?")
-                                                            resposta = input_por_voz()
-                                                            driver.find_element(By.NAME, "quantidade_vagas").clear()
-                                                            driver.find_element(By.NAME, "quantidade_vagas").send_keys(resposta)
-                                                        else:
-                                                            print("Campo inválido. Tente novamente.")
-                                                            talk("Campo inválido. Tente novamente.")
-                                                    else:
-                                                        print("Resposta inválida. Tente novamente.")
-                                                        talk("Resposta inválida. Tente novamente.")
+                                        
+                if falar:
+                        print("Preenchendo o campo hora de descrição...")
+                        talk("Qual a descrição do evento?")
+                        descricao = input_por_voz()
+                        driver.find_element(By.NAME, "descricao").send_keys(descricao)
+                        
+                if falar:
+                    print("Preenchendo o campo quantidade de visitantes...")
+                    talk("Qual seria a quantidade de vagas para esse evento?")
+                    vagas = input_por_voz()
+                    driver.find_element(By.NAME, "visitantes").send_keys(vagas)
+                    confirmacao = False
+                    while not confirmacao:
+                        print("Confirmando os dados inseridos...")
+                        talk("Verifique os dados inseridos. Deseja confirmar?")
+                        resposta = input_por_voz().lower()
+                        
+                        if "sim" in resposta or "Sim" in resposta:
+                            confirmacao = True
+                            # Submeter o formulário
+                            driver.find_element(By.ID,"submit").click()
+                            print("Formulário submetido com sucesso!")
+                            
+                        elif "não" in resposta or "nao" in resposta:
+                            # Perguntar qual campo deseja alterar
+                            print("Qual campo você deseja alterar?")
+                            talk("Qual campo você deseja alterar?")
+                            campo_alterar = input_por_voz().lower()
+                            
+                            if "nome" in campo_alterar:
+                                talk("Qual o novo nome do evento?")
+                                nome = input_por_voz()
+                                driver.find_element(By.NAME, "nome").clear()
+                                driver.find_element(By.NAME, "nome").send_keys(nome)
+                            
+                            elif "data" in campo_alterar:
+                                talk("Qual a nova data do evento?")
+                                data = input_por_voz()
+                                data_formatada = formatar_data(data)
+                                driver.find_element(By.NAME, "data").clear()
+                                driver.find_element(By.NAME, "data").send_keys(data_formatada)
+                                
+                            elif "hora de inicio" in campo_alterar:
+                                talk("Qual o novo horário de inicio do evento?")
+                                hora_inicio = input_por_voz()
+                                if converter_horario(hora_inicio) == None:
+                                    hora_inicio = input_por_voz()
+                                    hora_inicio_formatada = converter_horario(hora_inicio)
+                                    driver.find_element(By.NAME, "hora_inicio").clear()
+                                    driver.find_element(By.NAME, "hora_inicio").send_keys(hora_inicio_formatada)
+                                else:
+                                    hora_inicio_formatada = converter_horario(hora_inicio)
+                                    driver.find_element(By.NAME, "hora_inicio").clear()
+                                    driver.find_element(By.NAME, "hora_inicio").send_keys(hora_inicio_formatada)
+                                    
+                            elif "hora de término" in campo_alterar:
+                                talk("Qual o novo horário de término do evento?")
+                                hora_fim = input_por_voz()
+                                if converter_horario(hora_fim) == None:
+                                    hora_fim = input_por_voz()
+                                    hora_fim_formatada = converter_horario(hora_fim)
+                                    driver.find_element(By.NAME, "hora_fim").clear()
+                                    driver.find_element(By.NAME, "hora_fim").send_keys(hora_fim_formatada)
+                                else:
+                                    hora_fim_formatada = converter_horario(hora_fim)
+                                    driver.find_element(By.NAME, "hora_fim").clear()
+                                    driver.find_element(By.NAME, "hora_fim").send_keys(hora_fim_formatada)
+                                    
+                            elif "descrição" in campo_alterar:
+                                talk("Qual a nova descrição do evento?")
+                                resposta = input_por_voz()
+                                driver.find_element(By.NAME, "descricao").clear()
+                                driver.find_element(By.NAME, "descricao").send_keys(resposta)
+                                
+                            elif "quantidade de vagas" in campo_alterar:
+                                talk("Qual seria a nova quantidade de vagas para esse evento?")
+                                resposta = input_por_voz()
+                                driver.find_element(By.NAME, "quantidade_vagas").clear()
+                                driver.find_element(By.NAME, "quantidade_vagas").send_keys(resposta)
+                                
+                       
+                        else:
+                            print("Resposta inválida. Tente novamente.")
+                            talk("Resposta inválida. Tente novamente.")
+                            
+                else:
+                    print("Campo inválido. Tente novamente.")
+                    talk("Campo inválido. Tente novamente.")
 
-                                                # Submeter o formulário
-                                                driver.find_element(By.ID,"submit").click()
-                                                print("Formulário submetido com sucesso!")
+                    
                         
             else:
                 print("Usuario:", question)
