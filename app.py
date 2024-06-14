@@ -8,16 +8,16 @@ load_dotenv()
 
 # Conexão com o banco de dados
 mydb = mysql.connector.connect(
-    host=os.getenv('HOST'),
-    user=os.getenv('USER'),
-    password=os.getenv('PASSWORD'),
-    database=os.getenv('DATABASE')
+    host=os.getenv('DB_HOST'),
+    user=os.getenv('DB_USER'),
+    password=os.getenv('DB_PASSWORD'),
+    database=os.getenv('DB_SCHEMA')
 )
 
 # Inicializando o Flask
 app = Flask(__name__, static_folder='static')
 
-app.secret_key = os.getenv('key')
+app.secret_key = os.getenv('SECRET_KEY')
 
 
 # Endpoint para mostrar todos os eventos
@@ -83,9 +83,7 @@ def form():
         mydb.commit()
 
         if (200):
-            return "Evento Criado com Sucesso!!"
-
-        return redirect(url_for('eventos'))
+            return redirect(url_for('eventos'))
 
     return render_template("novo_evento.html")
 
@@ -121,12 +119,12 @@ def editar_evento(id):
         )
         
         if request.method == 'POST':
-            req = request.json()
+            req = request.form
             evento_atualizado = agenda.editar_evento(req['nome'], req['data'], req['hora_inicio'], req['hora_fim'], req['descricao'], req['google_id'])
             cursor.execute(f"UPDATE eventos SET nome = '{req['nome']}', data_evento = '{req['data']}', hora_inicio = '{req['hora_inicio']}', hora_fim = '{req['hora_fim']}', descricao = '{req['descricao']}', qtd_visitantes = '{req['visitantes']}' WHERE id = '{id}' ")
             mydb.commit()
             if(200) and evento_atualizado == 'ok':
-                return "Evento Alterado com Sucesso!!"
+                return redirect(url_for('eventos'))
             else:
                 render_template('editar_evento.html', msg = 'Não foi possível alterar o evento')
                 
@@ -137,7 +135,7 @@ def editar_evento(id):
 def deletar_evento(id):
     
     if request.method == 'POST':
-        req = request.json()
+        req = request.form
         
         cursor = mydb.cursor()
         cursor.execute(f"SELECT matricula FROM funcionarios WHERE matricula = '{req['matricula']}'")
@@ -154,7 +152,7 @@ def deletar_evento(id):
             evento_deletado = agenda.excluir_evento(google_id)
             mydb.commit()
             if (200) and evento_deletado == 'ok':
-                return "Evento Deletado com Sucesso"
+                return redirect(url_for('eventos'))
             else:
                 return render_template("verificacao.html", msg = 'Ocorreu um erro durante a mudança')
         
@@ -239,7 +237,7 @@ def login():
 @app.route("/evento", methods = ['GET'])
 def evento_proximo():
     cursor = mydb.cursor()
-    cursor.execute(f"SELECT * FROM eventos ORDER BY data_evento DESC LIMIT 1")
+    cursor.execute(f"SELECT * FROM eventos ORDER BY data_evento ASC LIMIT 1")
     resultados = cursor.fetchall()
     evento = list()
     for dado in resultados:

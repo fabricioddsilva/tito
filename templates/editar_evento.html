@@ -48,6 +48,7 @@
             <p>Preencha os Dados!!</p>
             <form class="requires-validation" method="POST" novalidate>
               {% for dado in evento %}
+              <input type="hidden" value="{{dado.google_id}}" name="google_id">
               <div class="col-md-12">
                 <input class="form-control" type="text" name="nome" placeholder="Nome do Evento" value="{{dado.nome}}" required>
                 <div class="invalid-feedback">Preencha o nome do evento!</div>
