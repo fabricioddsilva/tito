@@ -71,7 +71,7 @@ def form():
     # Caso a requisição for post
     if request.method == 'POST':
 
-        req = request.get_json()
+        req = request.form
 
         google_event = agenda.criar_evento(req['nome'], req['data'], req['hora_inicio'], req['hora_fim'], req['descricao'])
         
@@ -254,6 +254,7 @@ def evento_proximo():
                 "visitantes" : dado[6]
             }
         )
+    
     return jsonify(evento)
 
 @app.route('/deslogar')
