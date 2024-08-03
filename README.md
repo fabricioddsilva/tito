@@ -63,6 +63,34 @@ O *TiTo* é um assistente virtual desenvolvido para o gerenciamento e segurança
 
 - "*Tito, como você foi feito?*" traz uma descrição pouco técnica de como ele foi criado.
 
+- "*Tito, novo evento*" o Tito se conecta em nosso aplicativo web e consegue preencher os dados para criar um novo evento
+utilizando o reconhecimento de voz.
+
+- "*Tito, qual o evento mais recente?*" o Tito se conecta em nossa API assim trazendo o evento mais recente.
+  
+### Demonstrações
+
+https://github.com/user-attachments/assets/bba929c2-364c-4c9d-a21b-5d0b33ca9dce
+
+---
+
+https://github.com/user-attachments/assets/8f779509-a6eb-40ac-ba5e-5b2bfb85c634
+
+---
+
+https://github.com/user-attachments/assets/50302376-2433-4289-acb4-d8f1e23ba934
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
